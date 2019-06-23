@@ -1,0 +1,766 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: JR CMS
+  description: This is the api server for JR CMS
+  contact:
+    name: Mason
+    email: mason.xiong@yahoo.com
+servers:
+  - url: /v1
+
+tags:
+  - name: 'users'
+    description: 'Operations about users'
+  - name: 'auth'
+    description: 'User authentication'
+  - name: 'students'
+    description: 'Operations about students'
+  - name: 'teachers'
+    description: 'Operations about teachers'
+  - name: 'courses'
+    description: 'Operations about courses'
+
+paths:
+  /users:
+    post:
+      tags:
+        - 'users'
+      summary: 'Register a new user'
+      description: ''
+      operationId: 'addUser'
+      requestBody:
+        description: 'Required user fields'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        400:
+          description: 'Bad Request'
+        201:
+          description: 'Created'
+
+  /users/me:
+    get:
+      tags:
+        - 'users'
+      summary: 'Get current user info'
+      description: ''
+      operationId: 'getUser'
+      responses:
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'UnAuthorized'
+      security:
+        - Bearer: []
+
+  /auth:
+    post:
+      tags:
+        - 'auth'
+      summary: 'login user'
+      operationId: 'login'
+      requestBody:
+        description: 'Required user fields'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth'
+      responses:
+        200:
+          description: 'successful'
+        400:
+          description: 'Invalid username or password'
+
+  /students:
+    get:
+      tags:
+        - 'students'
+      summary: 'Get all students'
+      description: 'return 10 by default'
+      operationId: 'getStudents'
+      parameters:
+        - name: 'page'
+          in: 'query'
+          description: 'Current page number'
+          schema:
+            type: string
+        - name: 'pageSize'
+          in: 'query'
+          description: 'Number of items on each page'
+          schema:
+            type: number
+        - name: 'sort'
+          in: 'query'
+          description: 'how to sort the result'
+          schema:
+            type: string
+        - name: 'q'
+          in: 'query'
+          description: 'search key'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful'
+        401:
+          description: 'UnAuthorized'
+      security:
+        - Bearer: []
+
+    post:
+      tags:
+        - 'students'
+      summary: 'Add new student'
+      operationId: 'addStudent'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        200:
+          description: 'created'
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'UnAuthorized'
+      security:
+        - Bearer: []
+
+  /students/{studentId}:
+    get:
+      tags:
+        - 'students'
+      summary: 'Find student by ID'
+      description: 'Returns a single student'
+      operationId: 'getStudentById'
+      parameters:
+        - name: 'studentId'
+          in: 'path'
+          description: 'ID of student to return'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Student not found'
+      security:
+        - Bearer: []
+    put:
+      tags:
+        - 'students'
+      summary: 'Updates a student'
+      description: ''
+      operationId: 'updateStudent'
+      parameters:
+        - name: 'studentId'
+          in: 'path'
+          description: 'ID of student to return'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Student not found'
+      security:
+        - Bearer: []
+    delete:
+      tags:
+        - 'students'
+      summary: 'Deletes a student'
+      description: ''
+      operationId: 'deleteStudent'
+      parameters:
+        - name: 'studentId'
+          in: 'path'
+          description: 'ID of student to return'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Student not found'
+      security:
+        - Bearer: []
+
+  /students/{studentId}/courses/{courseCode}:
+    post:
+      tags:
+        - 'students'
+      summary: 'add a course to students'
+      description: ''
+      operationId: 'addStudentCourse'
+      parameters:
+        - name: 'studentId'
+          in: 'path'
+          description: 'ID of student to update'
+          required: true
+          schema:
+            type: string
+        - name: 'courseCode'
+          in: 'path'
+          description: 'course to be added'
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: 'Success'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Student not found'
+      security:
+        - Bearer: []
+    delete:
+      tags:
+        - 'students'
+      summary: 'delete a course from students'
+      description: ''
+      operationId: 'deleteStudentCourse'
+      parameters:
+        - name: 'studentId'
+          in: 'path'
+          description: 'ID of student to update'
+          required: true
+          schema:
+            type: string
+        - name: 'courseCode'
+          in: 'path'
+          description: 'course to be added'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Student or course not found'
+      security:
+        - Bearer: []
+
+  /students/{studentId}/avatar:
+    put:
+      tags:
+        - 'students'
+      summary: 'uploads an image for student avatar'
+      description: ''
+      operationId: 'uploadStudentAvatar'
+      parameters:
+        - name: 'studentId'
+          in: 'path'
+          description: 'ID of student to update'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Student not found'
+      security:
+        - Bearer: []
+      deprecated: true
+  # --------------------------------- student end -------------------------- #
+  # --------------------------------- teacher start -------------------------- #
+  /teachers:
+    get:
+      tags:
+        - 'teachers'
+      summary: 'Get all teachers'
+      description: 'return 10 by default'
+      operationId: 'getTeachers'
+      parameters:
+        - name: 'page'
+          in: 'query'
+          description: 'Current page number'
+          schema:
+            type: string
+        - name: 'pageSize'
+          in: 'query'
+          description: 'Number of items on each page'
+          schema:
+            type: number
+        - name: 'sort'
+          in: 'query'
+          description: 'how to sort the result'
+          schema:
+            type: string
+        - name: 'q'
+          in: 'query'
+          description: 'search key'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful'
+        401:
+          description: 'UnAuthorized'
+      security:
+        - Bearer: []
+
+    post:
+      tags:
+        - 'teachers'
+      summary: 'Add new teacher'
+      operationId: 'addTeacher'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+      responses:
+        200:
+          description: 'created'
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'UnAuthorized'
+      security:
+        - Bearer: []
+
+  /teachers/{teacherId}:
+    get:
+      tags:
+        - 'teachers'
+      summary: 'Find teacher by ID'
+      description: 'Returns a single teacher'
+      operationId: 'getTeacherById'
+      parameters:
+        - name: 'teacherId'
+          in: 'path'
+          description: 'ID of teacher to return'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Teacher not found'
+      security:
+        - Bearer: []
+    put:
+      tags:
+        - 'teachers'
+      summary: 'Updates a teacher'
+      description: ''
+      operationId: 'updateTeacher'
+      parameters:
+        - name: 'teacherId'
+          in: 'path'
+          description: 'ID of teacher to return'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Teacher not found'
+      security:
+        - Bearer: []
+    delete:
+      tags:
+        - 'teachers'
+      summary: 'Deletes a teacher'
+      description: ''
+      operationId: 'deleteTeacher'
+      parameters:
+        - name: 'teacherId'
+          in: 'path'
+          description: 'ID of teacher to return'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Teacher not found'
+      security:
+        - Bearer: []
+
+  /teachers/{teacherId}/courses/{courseCode}:
+    post:
+      tags:
+        - 'teachers'
+      summary: 'add a course to teachers'
+      description: ''
+      operationId: 'addTeacherCourse'
+      parameters:
+        - name: 'teacherId'
+          in: 'path'
+          description: 'ID of teacher to update'
+          required: true
+          schema:
+            type: string
+        - name: 'courseCode'
+          in: 'path'
+          description: 'course to be added'
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: 'Success'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Teacher not found'
+      security:
+        - Bearer: []
+    delete:
+      tags:
+        - 'teachers'
+      summary: 'delete a course from teachers'
+      description: ''
+      operationId: 'deleteTeacherCourse'
+      parameters:
+        - name: 'teacherId'
+          in: 'path'
+          description: 'ID of teacher to update'
+          required: true
+          schema:
+            type: string
+        - name: 'courseCode'
+          in: 'path'
+          description: 'course to be added'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Teacher or course not found'
+      security:
+        - Bearer: []
+
+  /teachers/{teacherId}/avatar:
+    put:
+      tags:
+        - 'teachers'
+      summary: 'uploads an image for teacher avatar'
+      description: ''
+      operationId: 'uploadTeacherAvatar'
+      parameters:
+        - name: 'teacherId'
+          in: 'path'
+          description: 'ID of teacher to update'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Teacher not found'
+      security:
+        - Bearer: []
+      deprecated: true
+  # --------------------------------- teacher end -------------------------- #
+  # --------------------------------- course start -------------------------- #
+  /courses:
+    get:
+      tags:
+        - 'courses'
+      summary: 'Get all courses'
+      description: 'return 10 by default'
+      operationId: 'getCourses'
+      parameters:
+        - name: 'page'
+          in: 'query'
+          description: 'Current page number'
+          schema:
+            type: string
+        - name: 'pageSize'
+          in: 'query'
+          description: 'Number of items on each page'
+          schema:
+            type: number
+        - name: 'sort'
+          in: 'query'
+          description: 'how to sort the result'
+          schema:
+            type: string
+        - name: 'q'
+          in: 'query'
+          description: 'search key'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'successful'
+        401:
+          description: 'UnAuthorized'
+      security:
+        - Bearer: []
+
+    post:
+      tags:
+        - 'courses'
+      summary: 'Add new course'
+      operationId: 'addCourse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        200:
+          description: 'created'
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'UnAuthorized'
+      security:
+        - Bearer: []
+
+  /courses/{courseId}:
+    get:
+      tags:
+        - 'courses'
+      summary: 'Find course by ID'
+      description: 'Returns a single course'
+      operationId: 'getCourseById'
+      parameters:
+        - name: 'courseId'
+          in: 'path'
+          description: 'ID of course to return'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Course not found'
+      security:
+        - Bearer: []
+    put:
+      tags:
+        - 'courses'
+      summary: 'Updates a course'
+      description: ''
+      operationId: 'updateCourse'
+      parameters:
+        - name: 'courseId'
+          in: 'path'
+          description: 'ID of course to return'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Course not found'
+      security:
+        - Bearer: []
+    delete:
+      tags:
+        - 'courses'
+      summary: 'Deletes a course'
+      description: ''
+      operationId: 'deleteCourse'
+      parameters:
+        - name: 'courseId'
+          in: 'path'
+          description: 'ID of course to return'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Invalid params'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Course not found'
+      security:
+        - Bearer: []
+
+  /courses/{courseId}/image:
+    put:
+      tags:
+        - 'courses'
+      summary: 'uploads an image for course image'
+      description: ''
+      operationId: 'uploadCourseImage'
+      parameters:
+        - name: 'courseId'
+          in: 'path'
+          description: 'ID of course to update'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: 'Success'
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'UnAuthorized'
+        404:
+          description: 'Course not found'
+      security:
+        - Bearer: []
+      deprecated: true
+
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: 'object'
+      properties:
+        email:
+          type: 'string'
+        password:
+          type: 'string'
+        name:
+          type: 'string'
+          description: 'display name'
+    Student:
+      type: 'object'
+      properties:
+        firstName:
+          type: 'string'
+        lastName:
+          type: 'string'
+        emailName:
+          type: 'string'
+    Teacher:
+      type: 'object'
+      properties:
+        firstName:
+          type: 'string'
+        lastName:
+          type: 'string'
+        emailName:
+          type: 'string'
+    Course:
+      type: 'object'
+      properties:
+        code:
+          type: 'string'
+        name:
+          type: 'string'
+        description:
+          type: 'string'
+    Auth:
+      type: 'object'
+      properties:
+        email:
+          type: 'string'
+        password:
+          type: 'string'

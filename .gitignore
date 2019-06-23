@@ -1,0 +1,10 @@
+node_modules/
+logs/
+env.json
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+.dockerignore
+Dockerfile
