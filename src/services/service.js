@@ -16,13 +16,29 @@ class Service {
     const { page, pageSize } = pagination;
     let query;
     if (search) {
-      query = this.Model.searchQuery(pagination, sort, search);
+      query = this.Model.searchQuery(pagination, sort, search);  
     } else {
       query = this.Model.find();
       query = query.sort(sort);
       query = query.skip((page - 1) * pageSize).limit(pageSize);
     }
     return query;
+  }
+
+  async countAllBySearch(search) {
+    let query, count;
+
+    if (search) {
+      query = await this.Model.searchByKeyword(search);
+      count = query.length;
+      console.log(query);
+      console.log(count);
+    } else {
+      query = this.Model.find();
+      count = await this.Model.countDocuments(query);
+    }  
+
+    return count;
   }
 
   // populate should be an object like this {key1: selected_field, k2: s_f}

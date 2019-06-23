@@ -50,4 +50,8 @@ courseSchema.statics.searchQuery = async function(pagination, sort, search) {
     .limit(pageSize);
 };
 
+courseSchema.statics.searchByKeyword = async function(search) {
+  return this.find({ _id: { $regex: search, $options: 'i' } })
+};
+
 module.exports = mongoose.model('Course', courseSchema);
