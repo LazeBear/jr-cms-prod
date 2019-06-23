@@ -31,8 +31,6 @@ class Service {
     if (search) {
       query = await this.Model.searchByKeyword(search);
       count = query.length;
-      console.log(query);
-      console.log(count);
     } else {
       query = this.Model.find();
       count = await this.Model.countDocuments(query);
