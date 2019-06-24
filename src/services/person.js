@@ -39,9 +39,14 @@ class PersonService extends Service {
   }
 
   async countAllWithSearch(search) {
+    let count;
     const query = await this.Model.searchQueryCount(search);
-    const {count} = query[0];
-    return count;
+    if (!query[0]) {
+      count = 0;
+      return count;
+    }
+    count = query[0].count;
+    return count;;
   }
 }
 

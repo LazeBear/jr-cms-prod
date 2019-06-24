@@ -93,7 +93,7 @@ personSchema.statics.searchQueryCount = async function(key) {
     {
       $match: { fullName: new RegExp(key, 'i') }
     },
-    { $group: { _id: null, count: { $sum: 1 } } }
+    { $count: "count"}
   ];
 
   return this.aggregate(aggregate);
