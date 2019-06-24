@@ -16,7 +16,7 @@ class Service {
     const { page, pageSize } = pagination;
     let query;
     if (search) {
-      query = this.Model.searchQuery(pagination, sort, search);  
+      query = this.Model.searchQuery(pagination, sort, search);
     } else {
       query = this.Model.find();
       query = query.sort(sort);
