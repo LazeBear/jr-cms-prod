@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 const env = process.env.NODE_ENV;
-const logDirectory = path.join(process.env.PWD, 'logs');
+const logDirectory = path.join(process.cwd(), 'logs');
 const errorDirectory = path.join(logDirectory, 'errors');
 
 // eslint-disable-next-line no-unused-expressions
