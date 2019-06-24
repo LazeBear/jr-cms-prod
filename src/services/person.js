@@ -46,7 +46,7 @@ class PersonService extends Service {
       return count;
     }
     count = query[0].count;
-    return count;;
+    return count;
   }
 }
 
