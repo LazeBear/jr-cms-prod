@@ -81,5 +81,23 @@ personSchema.statics.searchQuery = async function(pagination, sort, key) {
   return this.aggregate(aggregate);
 };
 
+personSchema.statics.searchQueryCount = async function(key) {
+  const aggregate = [
+    {
+      $addFields: {
+        fullName: {
+          $concat: ['$firstName', ' ', '$lastName']
+        }
+      }
+    },
+    {
+      $match: { fullName: new RegExp(key, 'i') }
+    },
+    { $group: { _id: null, count: { $sum: 1 } } }
+  ];
+
+  return this.aggregate(aggregate);
+};
+
 // return a copy
 module.exports = (() => personSchema.clone())();

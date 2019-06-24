@@ -37,6 +37,12 @@ class PersonService extends Service {
       }
     );
   }
+
+  async countAllWithSearch(search) {
+    const query = await this.Model.searchQueryCount(search);
+    const {count} = query[0];
+    return count;
+  }
 }
 
 module.exports = PersonService;
