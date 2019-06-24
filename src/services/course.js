@@ -2,6 +2,11 @@ const Course = require('../models/course');
 const Service = require('./service');
 
 class CourseService extends Service {
+  async countAllWithSearch(search) {
+    const count = await this.Model.searchQueryCount(search);
+    return count;
+  }
+
   async removeTeacherRefs(teacherId) {
     return this.Model.updateMany(
       {
