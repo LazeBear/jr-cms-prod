@@ -5,6 +5,9 @@ const path = require('path');
 const fs = require('fs');
 
 const env = process.env.NODE_ENV;
+if (!process.env.PWD) {
+  process.env.PWD = process.cwd();
+}
 const logDirectory = path.join(process.env.PWD, 'logs');
 const errorDirectory = path.join(logDirectory, 'errors');
 
