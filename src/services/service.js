@@ -8,6 +8,16 @@ class Service {
     return count;
   }
 
+  async countAllWithSearch(search) {
+    let count;
+    if (search) {
+      count = this.Model.searchQueryCount(search);
+    } else {
+      count = await this.Model.find().countDocuments();
+    }
+    return count;
+  }
+
   async getOne(id) {
     return this.Model.findById(id);
   }

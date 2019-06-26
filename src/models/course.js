@@ -50,4 +50,9 @@ courseSchema.statics.searchQuery = async function(pagination, sort, search) {
     .limit(pageSize);
 };
 
+courseSchema.statics.searchQueryCount = async function(search) {
+  const count = await this.find({ _id: { $regex: search, $options: 'i' } }).countDocuments();
+  return count;
+};
+
 module.exports = mongoose.model('Course', courseSchema);

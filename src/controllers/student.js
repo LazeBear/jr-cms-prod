@@ -10,7 +10,9 @@ const {
 const { deleteImage } = require('../utils/upload');
 
 async function getAllStudents(req, res) {
-  const total = await studentService.countAll();
+  const { q } = req.query;
+  const total = await studentService.countAllWithSearch(q);
+
   const { pagination, sort, search } = convertQuery(req.query, total);
 
   const students = await studentService.getAll(pagination, sort, search);
