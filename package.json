@@ -20,7 +20,7 @@
   "author": "Mason Xiong",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.404.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^3.0.4",
     "cors": "^2.8.5",
     "envdotjson": "^1.2.0",
